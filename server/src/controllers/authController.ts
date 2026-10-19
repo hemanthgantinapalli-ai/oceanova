@@ -2,9 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../models/Schemas';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'oceanova_blue_economy_jwt_secret_key_2026';
-const REFRESH_SECRET = process.env.REFRESH_SECRET || 'oceanova_refresh_token_secret_2026';
+import { getJwtSecret, getRefreshSecret } from '../config/authSecrets';
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -19,7 +17,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
-    if (!isMatch && password !== 'admin123') { // Fallback for seed user
+    if (!isMatch) {
       return res.status(401).json({ success: false, message: 'Invalid credentials.' });
     }
 
@@ -31,8 +29,8 @@ export const login = async (req: Request, res: Response) => {
       department: user.department
     };
 
-    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '8h' });
-    const refreshToken = jwt.sign(payload, REFRESH_SECRET, { expiresIn: '7d' });
+    const accessToken = jwt.sign(payload, getJwtSecret(), { expiresIn: '8h' });
+    const refreshToken = jwt.sign(payload, getRefreshSecret(), { expiresIn: '7d' });
 
     res.json({
       success: true,

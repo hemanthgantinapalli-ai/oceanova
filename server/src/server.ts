@@ -4,15 +4,13 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 
 import { connectDB } from './config/db';
 import { seedDatabase } from './config/seed';
 import routes from './routes';
 import { errorHandler } from './middleware/errorHandler';
 import { setupSocketHandlers } from './sockets/telemetrySocket';
-
-dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
@@ -41,8 +39,6 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // Mount API routes
-app.use('/api/v1', routes);
-
 // Base Health Check
 app.get('/health', (req, res) => {
   res.json({
@@ -51,6 +47,17 @@ app.get('/health', (req, res) => {
     timestamp: new Date()
   });
 });
+
+app.use(async (_req, _res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.use('/api/v1', routes);
 
 // Global Error Handler
 app.use(errorHandler);
@@ -62,7 +69,9 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   await connectDB();
-  await seedDatabase();
+  if (process.env.NODE_ENV !== 'production') {
+    await seedDatabase();
+  }
 
   server.listen(PORT, () => {
     console.log(`====================================================`);
@@ -74,4 +83,12 @@ const startServer = async () => {
   });
 };
 
-startServer();
+export { app, server };
+export default server;
+
+if (process.env.VERCEL !== '1') {
+  startServer().catch((error: unknown) => {
+    console.error('[Server] Startup failed.', error);
+    process.exitCode = 1;
+  });
+}

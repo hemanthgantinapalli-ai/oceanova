@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { getJwtSecret } from '../config/authSecrets';
 
 export interface AuthRequest extends Request {
   user?: {
@@ -10,17 +11,16 @@ export interface AuthRequest extends Request {
   };
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'oceanova_blue_economy_jwt_secret_key_2026';
-
 export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     // Demo fallback for unauthenticated requests in development mode
     const mockToken = req.headers['x-demo-user'];
-    if (mockToken === 'founder') {
+    const isLocalDevelopment = process.env.NODE_ENV !== 'production' && process.env.VERCEL !== '1';
+    if (isLocalDevelopment && mockToken === 'founder') {
       req.user = { id: 'u-founder', email: 'founder@oceanova.org', role: 'FOUNDER', name: 'Dr. Oceanova Founder' };
       return next();
-    } else if (mockToken === 'researcher') {
+    } else if (isLocalDevelopment && mockToken === 'researcher') {
       req.user = { id: 'u-researcher', email: 'researcher@oceanova.org', role: 'RESEARCHER', name: 'Dr. Marine Scientist' };
       return next();
     }
@@ -28,8 +28,9 @@ export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction)
   }
 
   const token = authHeader.split(' ')[1];
+  const jwtSecret = getJwtSecret();
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const decoded = jwt.verify(token, jwtSecret) as any;
     req.user = decoded;
     next();
   } catch (err) {

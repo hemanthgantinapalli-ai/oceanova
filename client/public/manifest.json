@@ -1,0 +1,15 @@
+{
+  "short_name": "OceaNova",
+  "name": "OceaNova Blue Economy Foundation",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0A192F",
+  "theme_color": "#00F0FF",
+  "display": "standalone"
+}

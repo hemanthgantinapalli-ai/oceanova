@@ -1,0 +1,211 @@
+@import 'leaflet/dist/leaflet.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-ocean-navy: #0A2540;
+    --color-ocean-blue: #147EA8;
+    --color-aqua-blue: #38B7C9;
+    --color-eco-green: #43A047;
+    --color-soft-green: #66B86A;
+    --color-mint-green: #D8EEDB;
+    --color-pure-white: #FFFFFF;
+    --color-soft-gray: #F1F5F9;
+    --color-pale-ocean: #E8F6F8;
+  }
+
+  body {
+    background-color: #F1F5F9;
+    color: #0A2540;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@keyframes oceanova-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes oceanova-drift {
+  0%,
+  100% {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: scale(1.08) translate3d(-1%, -0.5%, 0);
+  }
+}
+
+.home-reveal {
+  animation: oceanova-rise 700ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.home-reveal-delay-1 {
+  animation-delay: 120ms;
+}
+
+.home-reveal-delay-2 {
+  animation-delay: 240ms;
+}
+
+.home-hero-media {
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 22px;
+  background: #e8f6f8;
+}
+
+.home-hero-media::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(90deg, #f8fcfd 0%, rgba(248, 252, 253, 0.42) 32%, transparent 68%),
+    linear-gradient(0deg, rgba(232, 246, 248, 0.6), transparent 36%);
+  content: '';
+}
+
+.home-hero-video {
+  opacity: 0.82;
+  animation: oceanova-drift 24s ease-in-out infinite;
+}
+
+.home-stat {
+  animation: oceanova-rise 650ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.home-stat:nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.home-stat:nth-child(3) {
+  animation-delay: 160ms;
+}
+
+.home-stat:nth-child(4) {
+  animation-delay: 240ms;
+}
+
+.home-stat:nth-child(5) {
+  animation-delay: 320ms;
+}
+
+.home-pillar-card {
+  animation: oceanova-rise 700ms 120ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.home-pillar-delay-1 {
+  animation-delay: 220ms;
+}
+
+.home-pillar-delay-2 {
+  animation-delay: 320ms;
+}
+
+@media (max-width: 767px) {
+  .home-hero-media::after {
+    background: linear-gradient(0deg, rgba(232, 246, 248, 0.55), transparent 70%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .home-hero-video {
+    display: none;
+  }
+}
+
+/* Clean Simple Cards */
+.clean-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(20, 126, 168, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(10, 37, 64, 0.06);
+  transition: all 0.3s ease;
+}
+
+.clean-card:hover {
+  border-color: #38B7C9;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 35px rgba(10, 37, 64, 0.1);
+}
+
+.glass-panel {
+  background: #FFFFFF;
+  border: 1px solid rgba(20, 126, 168, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(10, 37, 64, 0.05);
+}
+
+.glass-panel-hover:hover {
+  border-color: #38B7C9;
+  box-shadow: 0 12px 30px rgba(10, 37, 64, 0.08);
+}
+
+/* Primary Button: #147EA8 -> Hover #0A2540 */
+.btn-primary {
+  background-color: #147EA8;
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0A2540;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(10, 37, 64, 0.2);
+}
+
+/* Secondary Button: White with #147EA8 border */
+.btn-secondary {
+  background-color: #FFFFFF;
+  border: 2px solid #147EA8;
+  color: #147EA8;
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #147EA8;
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+/* Navy Accent Button: #0A2540 -> Hover #147EA8 */
+.btn-navy {
+  background-color: #0A2540;
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: all 0.25s ease;
+}
+
+.btn-navy:hover {
+  background-color: #147EA8;
+  transform: translateY(-1px);
+}
+
+/* Leaflet Map Overrides */
+.leaflet-container {
+  background: #E8F6F8 !important;
+  border-radius: 16px;
+}
